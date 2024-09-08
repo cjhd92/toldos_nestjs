@@ -20,16 +20,9 @@ export class ToldosController {
 
     }
 
-    @Get('download-pdf')
+    /* @Get('download-pdf')
     async downloadPdf(@Res() res: Response) {
-        // Datos que se pasarán al script de Python
-        /* const data = {
-        presupuesto_id: 'P001',
-        cliente: 'Cliente Ejemplo',
-        localidad: 'Localidad Ejemplo',
-        telefono: '+34 123 456 789',
-        // Otros datos necesarios...
-        }; */
+        
 
         const data = this.presupuestoService.getLastPresupuesto()
         console.log(data)
@@ -44,7 +37,44 @@ export class ToldosController {
             console.error('Error al procesar la solicitud de descarga del PDF:', error);
             res.status(500).send('Error al generar el PDF desde el controlador');
         }
+    } */
+
+        @Get('download-pdf')
+  async downloadPdf(
+    @Query('numero_presupuesto') numeroPresupuesto: string, // Obtener el número de presupuesto desde la query
+    @Res() res: Response,
+  ) {
+    try {
+      // Buscar el presupuesto correspondiente
+      const data = await this.presupuestoService.getPresupuestoByNumero(
+        numeroPresupuesto,
+      );
+
+      if (!data) {
+        // Manejar el caso en que no se encuentre el presupuesto
+        res.status(404).send('Presupuesto no encontrado');
+        return;
+      }
+
+      // Generar el PDF utilizando los datos del presupuesto
+      const pdfBuffer = await this.pdfService.generarPdf(data);
+
+      // Configurar los encabezados de la respuesta para enviar el PDF
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader(
+        'Content-Disposition',
+        `attachment; filename=presupuesto_${numeroPresupuesto}.pdf`,
+      );
+      res.send(pdfBuffer); // Enviar el PDF como respuesta
+    } catch (error) {
+      console.error(
+        'Error al procesar la solicitud de descarga del PDF:',
+        error,
+      );
+      res.status(500).send('Error al generar el PDF desde el controlador');
     }
+  }
+
 
     @Get('nombreOperarioFecha')
     async getFilteredDocuments(

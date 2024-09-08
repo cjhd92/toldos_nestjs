@@ -200,6 +200,10 @@ export class ToldosService {
       .exec();
   }
 
+   // Método para obtener un presupuesto por su número
+   async getPresupuestoByNumero(numeroPresupuesto: string) {
+    return this.presupuestoModel.findOne({ numero_presupuesto: numeroPresupuesto }).exec();
+  }
     }
 
 
