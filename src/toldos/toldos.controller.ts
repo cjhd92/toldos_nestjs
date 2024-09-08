@@ -66,4 +66,12 @@ export class ToldosController {
         return this.presupuestoService.getDocumentsByOperario(operario);
   }
 
+    @Get('nombreOperarioAllFecha')
+    async getDocumentsByOperarioPresupuesto(
+        @Query('operario') operario: string,
+        @Query('presupuesto') presupuesto: string,
+    ) {
+        return this.presupuestoService.getDocumentsByOperarioAndpresupuesto(operario, presupuesto);
+    } 
+
 }

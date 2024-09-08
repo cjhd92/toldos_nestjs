@@ -193,5 +193,14 @@ export class ToldosService {
       return this.presupuestoModel.find({ operario:  operario }).exec();
     }
 
+    async getDocumentsByOperarioAndpresupuesto(operario:string, presupuesto:string){
 
-}
+      return this.presupuestoModel
+      .find({ operario: operario, numero_presupuesto: presupuesto })
+      .exec();
+  }
+
+    }
+
+
+
